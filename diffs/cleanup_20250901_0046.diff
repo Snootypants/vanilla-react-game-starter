@@ -1,0 +1,43 @@
+diff --git a/.gitignore b/.gitignore
+index 404f147..0d62363 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -20,4 +20,7 @@
+ .AppleDesktop
+ Network Trash Folder
+ Temporary Items
+-.apdisk
+\ No newline at end of file
++.apdisk
++
++# Dependencies
++node_modules/
+\ No newline at end of file
+diff --git a/reactShell/src/game/GameCanvas.tsx b/reactShell/src/game/GameCanvas.tsx
+index e3f26e9..cec45d1 100644
+--- a/reactShell/src/game/GameCanvas.tsx
++++ b/reactShell/src/game/GameCanvas.tsx
+@@ -21,12 +21,6 @@ export default function GameCanvas() {
+     camera.position.z = 5
+     camera.lookAt(0, 0, 0)
+     
+-    // Add test geometry to verify rendering works
+-    const geometry = new THREE.BoxGeometry()
+-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+-    const cube = new THREE.Mesh(geometry, material)
+-    scene.add(cube)
+-    
+     // Initialize PostFX with default direct rendering (vanilla parity)
+     createComposer(renderer, scene, camera, {
+       width: window.innerWidth,
+@@ -53,10 +47,6 @@ export default function GameCanvas() {
+       const dt = (now - last) / 1000
+       last = now
+       
+-      // Animate test cube
+-      cube.rotation.x += dt
+-      cube.rotation.y += dt * 0.5
+-      
+       render(dt) // Uses direct rendering by default (vanilla parity)
+       raf = requestAnimationFrame(animate)
+     }

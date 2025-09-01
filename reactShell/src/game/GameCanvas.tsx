@@ -21,12 +21,6 @@ export default function GameCanvas() {
     camera.position.z = 5
     camera.lookAt(0, 0, 0)
     
-    // Add test geometry to verify rendering works
-    const geometry = new THREE.BoxGeometry()
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-    const cube = new THREE.Mesh(geometry, material)
-    scene.add(cube)
-    
     // Initialize PostFX with default direct rendering (vanilla parity)
     createComposer(renderer, scene, camera, {
       width: window.innerWidth,
@@ -52,10 +46,6 @@ export default function GameCanvas() {
     const animate = (now: number) => {
       const dt = (now - last) / 1000
       last = now
-      
-      // Animate test cube
-      cube.rotation.x += dt
-      cube.rotation.y += dt * 0.5
       
       render(dt) // Uses direct rendering by default (vanilla parity)
       raf = requestAnimationFrame(animate)
