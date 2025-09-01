@@ -1,0 +1,192 @@
+diff --git a/LICENSE b/LICENSE
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/LICENSE
+@@ -0,0 +1,26 @@
++PROPRIETARY SOFTWARE LICENSE
++
++Copyright (c) 2025 Snootypants. All Rights Reserved.
++
++This software and associated documentation files (the "Software") are the 
++proprietary and confidential property of Snootypants.
++
++NO PERMISSION IS GRANTED to use, copy, modify, merge, publish, distribute, 
++sublicense, sell, or create derivative works from this Software.
++
++STRICTLY PROHIBITED:
++- Copying or downloading this code
++- Using any part of this code in other projects
++- Sharing or distributing this code in any form
++- Creating derivative works based on this code
++- Commercial or non-commercial use without explicit written permission
++
++This repository is made public for VIEWING PURPOSES ONLY. Access to view this 
++repository does not grant any rights to use the Software.
++
++Any unauthorized use, reproduction, or distribution of this Software is strictly 
++prohibited and may result in severe civil and criminal penalties, and will be 
++prosecuted to the maximum extent possible under law.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT ANY WARRANTY OF ANY KIND. THE COPYRIGHT 
++HOLDER SHALL NOT BE LIABLE FOR ANY DAMAGES ARISING FROM VIEWING THIS SOFTWARE.
+diff --git a/reactShell/README.md b/reactShell/README.md
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/README.md
+@@ -0,0 +1,52 @@
++# Asteroids v2 - React Shell
++
++A React/TypeScript implementation with exact parity to the vanilla HTML version.
++
++## Development
++
++### Setup
++```bash
++npm install
++```
++
++### Commands
++- `npm run dev` - Start development server (port 3000)
++- `npm run build` - Build for production
++- `npm run preview` - Preview production build
++
++## Asset Requirements
++
++Assets must be referenced exactly as in vanilla:
++- Use `assets/...` paths (no leading slash)
++- Mirror `/vanillaHTML/` structure exactly
++- Preserve exact filename casing (e.g., `Hanger.png` with uppercase H)
++
++Example asset references:
++```typescript
++// Correct
++const texture = loader.load('assets/ship/ship.png')
++const img = <img src="assets/start_screen.png" />
++
++// Incorrect
++const texture = loader.load('/assets/ship/ship.png')  // No leading slash
++const img = <img src="assets/hanger.png" />          // Wrong case
++```
++
++## Case Sensitivity
++
++For consistent behavior across platforms, configure git:
++```bash
++git config core.ignorecase false
++```
++
++## Parity Requirements
++
++This React shell must maintain strict parity with `/vanillaHTML/`:
++- Identical visual output
++- Identical gameplay mechanics
++- Identical asset loading
++- Identical Three.js behavior
++
++## Development Policy
++
++All changes must be committed as full unified diffs under `/diffs/` with timestamped filenames, ready for `git apply`.
+diff --git a/reactShell/package.json b/reactShell/package.json
+index 0000000..0000000
+--- a/reactShell/package.json
++++ b/reactShell/package.json
+@@ -11,8 +11,7 @@
+   "dependencies": {
+     "react": "^18.2.0",
+     "react-dom": "^18.2.0",
+-    "three": "0.158.0",
+-    "@types/three": "0.158.0"
++    "three": "0.158.0"
+   },
+   "devDependencies": {
+     "@types/react": "^18.2.0",
+diff --git a/reactShell/src/game/render/PostFX.ts b/reactShell/src/game/render/PostFX.ts
+index 0000000..0000000
+--- a/reactShell/src/game/render/PostFX.ts
++++ b/reactShell/src/game/render/PostFX.ts
+@@ -1,2 +1,56 @@
+-// PostFX.ts - EffectComposer chain
+-export class PostFX {}
++import * as THREE from 'three'
++import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
++import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
++import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js'
++import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js'
++
++export function createComposer(
++  renderer: THREE.WebGLRenderer,
++  scene: THREE.Scene,
++  camera: THREE.Camera,
++  size: { width: number; height: number }
++) {
++  // Set renderer properties to match vanilla
++  renderer.setPixelRatio(window.devicePixelRatio)
++  renderer.outputColorSpace = THREE.SRGBColorSpace
++  renderer.toneMapping = THREE.ACESFilmicToneMapping
++  renderer.toneMappingExposure = 1.2
++
++  // Create composer
++  const composer = new EffectComposer(renderer)
++  composer.setSize(size.width, size.height)
++  
++  // Add render pass
++  composer.addPass(new RenderPass(scene, camera))
++  
++  // Add outline pass
++  const outlinePass = new OutlinePass(
++    new THREE.Vector2(size.width, size.height),
++    scene,
++    camera
++  )
++  composer.addPass(outlinePass)
++  
++  // Add bloom pass with exact vanilla parameters
++  const bloom = new UnrealBloomPass(
++    new THREE.Vector2(size.width, size.height),
++    0.9,  // strength
++    0.8,  // radius  
++    0.85  // threshold
++  )
++  bloom.threshold = 0.2
++  bloom.strength = 1.25
++  bloom.radius = 0.6
++  composer.addPass(bloom)
++
++  return {
++    composer,
++    resize: (width: number, height: number) => {
++      composer.setSize(width, height)
++      outlinePass.setSize(width, height)
++    },
++    render: (delta: number) => {
++      composer.render(delta)
++    }
++  }
++}
+diff --git a/reactShell/src/main.tsx b/reactShell/src/main.tsx
+index 0000000..0000000
+--- a/reactShell/src/main.tsx
++++ b/reactShell/src/main.tsx
+@@ -4,7 +4,5 @@ import App from './App.tsx'
+ import './index.css'
+ 
+ ReactDOM.createRoot(document.getElementById('root')!).render(
+-  <React.StrictMode>
+-    <App />
+-  </React.StrictMode>,
++  <App />
+ )
+diff --git a/reactShell/vite.config.ts b/reactShell/vite.config.ts
+index 0000000..0000000
+--- a/reactShell/vite.config.ts
++++ b/reactShell/vite.config.ts
+@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
+ 
+ // https://vitejs.dev/config/
+ export default defineConfig({
++  base: './',
+   plugins: [react()],
+   server: {
+     port: 3000
