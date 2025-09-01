@@ -1,4 +1,48 @@
-// GameCanvas.tsx - Three.js mount point
+// GameCanvas.tsx - Three.js mount point with minimal PostFX integration
+import { useEffect, useRef } from 'react'
+import * as THREE from 'three'
+import { createComposer, resize, render } from './render/PostFX'
+
 export default function GameCanvas() {
-  return <canvas id="game-canvas" />
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  useEffect(() => {
+    if (!canvasRef.current) return
+
+    // Basic Three.js setup - placeholder for full game integration
+    const renderer = new THREE.WebGLRenderer({ canvas: canvasRef.current })
+    const scene = new THREE.Scene()
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    
+    // Initialize PostFX with default direct rendering (vanilla parity)
+    createComposer(renderer, scene, camera, {
+      width: window.innerWidth,
+      height: window.innerHeight
+    })
+
+    // Handle resize
+    const handleResize = () => {
+      const width = window.innerWidth
+      const height = window.innerHeight
+      camera.aspect = width / height
+      camera.updateProjectionMatrix()
+      resize(width, height)
+    }
+
+    window.addEventListener('resize', handleResize)
+    handleResize()
+
+    // Basic render loop - will be replaced by full game loop
+    const animate = (delta: number) => {
+      render(delta) // Uses direct rendering by default (vanilla parity)
+      requestAnimationFrame(animate)
+    }
+    requestAnimationFrame(animate)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
+
+  return <canvas ref={canvasRef} id="game-canvas" />
 }
