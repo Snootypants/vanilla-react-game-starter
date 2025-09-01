@@ -14,6 +14,8 @@ export default function GameCanvas() {
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
     
+    renderer.setPixelRatio(window.devicePixelRatio)
+    
     // Initialize PostFX with default direct rendering (vanilla parity)
     createComposer(renderer, scene, camera, {
       width: window.innerWidth,
