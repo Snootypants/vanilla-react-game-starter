@@ -33,8 +33,11 @@ export default function GameCanvas() {
     handleResize()
 
     // Basic render loop - will be replaced by full game loop
-    const animate = (delta: number) => {
-      render(delta) // Uses direct rendering by default (vanilla parity)
+    let last = performance.now()
+    const animate = (now: number) => {
+      const dt = (now - last) / 1000
+      last = now
+      render(dt) // Uses direct rendering by default (vanilla parity)
       requestAnimationFrame(animate)
     }
     requestAnimationFrame(animate)
