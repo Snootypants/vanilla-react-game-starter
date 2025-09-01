@@ -1,6 +1,8 @@
 {
-  "name": "asteroids-react-shell",
+  "name": "vanilla-react-game-starter",
   "private": true,
+  "description": "Minimal React + Three.js + Vite starter for web games (renderer, PostFX, input, DPR/resize).",
+  "license": "Proprietary",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
