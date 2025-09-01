@@ -1,0 +1,34 @@
+diff --git a/reactShell/src/game/GameCanvas.tsx b/reactShell/src/game/GameCanvas.tsx
+index fecdad9..c6dcc17 100644
+--- a/reactShell/src/game/GameCanvas.tsx
++++ b/reactShell/src/game/GameCanvas.tsx
+@@ -26,6 +26,7 @@ export default function GameCanvas() {
+       const height = window.innerHeight
+       camera.aspect = width / height
+       camera.updateProjectionMatrix()
++      renderer.setPixelRatio(window.devicePixelRatio)
+       resize(width, height)
+     }
+ 
+@@ -33,17 +34,19 @@ export default function GameCanvas() {
+     handleResize()
+ 
+     // Basic render loop - will be replaced by full game loop
++    let raf = 0
+     let last = performance.now()
+     const animate = (now: number) => {
+       const dt = (now - last) / 1000
+       last = now
+       render(dt) // Uses direct rendering by default (vanilla parity)
+-      requestAnimationFrame(animate)
++      raf = requestAnimationFrame(animate)
+     }
+-    requestAnimationFrame(animate)
++    raf = requestAnimationFrame(animate)
+ 
+     return () => {
+       window.removeEventListener('resize', handleResize)
++      cancelAnimationFrame(raf)
+     }
+   }, [])
+ 
