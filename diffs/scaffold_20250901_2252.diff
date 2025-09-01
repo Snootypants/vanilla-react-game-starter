@@ -1,0 +1,370 @@
+diff --git a/reactShell/package.json b/reactShell/package.json
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/package.json
+@@ -0,0 +1,28 @@
++{
++  "name": "asteroids-react-shell",
++  "private": true,
++  "version": "0.0.0",
++  "type": "module",
++  "scripts": {
++    "dev": "vite",
++    "build": "tsc && vite build",
++    "preview": "vite preview"
++  },
++  "dependencies": {
++    "react": "^18.2.0",
++    "react-dom": "^18.2.0",
++    "three": "0.158.0",
++    "@types/three": "0.158.0"
++  },
++  "devDependencies": {
++    "@types/react": "^18.2.0",
++    "@types/react-dom": "^18.2.0",
++    "@typescript-eslint/eslint-plugin": "^6.0.0",
++    "@typescript-eslint/parser": "^6.0.0",
++    "@vitejs/plugin-react": "^4.0.0",
++    "eslint": "^8.0.0",
++    "eslint-plugin-react-hooks": "^4.6.0",
++    "eslint-plugin-react-refresh": "^0.4.0",
++    "typescript": "^5.0.0",
++    "vite": "^5.0.0"
++  }
++}
+diff --git a/reactShell/tsconfig.json b/reactShell/tsconfig.json
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/tsconfig.json
+@@ -0,0 +1,25 @@
++{
++  "compilerOptions": {
++    "target": "ES2020",
++    "useDefineForClassFields": true,
++    "lib": ["ES2020", "DOM", "DOM.Iterable"],
++    "module": "ESNext",
++    "skipLibCheck": true,
++
++    /* Bundler mode */
++    "moduleResolution": "bundler",
++    "allowImportingTsExtensions": true,
++    "resolveJsonModule": true,
++    "isolatedModules": true,
++    "noEmit": true,
++    "jsx": "react-jsx",
++
++    /* Linting */
++    "strict": true,
++    "noUnusedLocals": true,
++    "noUnusedParameters": true,
++    "noFallthroughCasesInSwitch": true
++  },
++  "include": ["src"],
++  "references": [{ "path": "./tsconfig.node.json" }]
++}
+diff --git a/reactShell/tsconfig.node.json b/reactShell/tsconfig.node.json
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/tsconfig.node.json
+@@ -0,0 +1,11 @@
++{
++  "compilerOptions": {
++    "composite": true,
++    "skipLibCheck": true,
++    "module": "ESNext",
++    "moduleResolution": "bundler",
++    "allowSyntheticDefaultImports": true,
++    "strict": true
++  },
++  "include": ["vite.config.ts"]
++}
+diff --git a/reactShell/vite.config.ts b/reactShell/vite.config.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/vite.config.ts
+@@ -0,0 +1,10 @@
++import { defineConfig } from 'vite'
++import react from '@vitejs/plugin-react'
++
++// https://vitejs.dev/config/
++export default defineConfig({
++  plugins: [react()],
++  server: {
++    port: 3000
++  }
++})
+diff --git a/reactShell/index.html b/reactShell/index.html
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/index.html
+@@ -0,0 +1,13 @@
++<!doctype html>
++<html lang="en">
++  <head>
++    <meta charset="UTF-8" />
++    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
++    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++    <title>Asteroids v2 - React Shell</title>
++  </head>
++  <body>
++    <div id="root"></div>
++    <script type="module" src="/src/main.tsx"></script>
++  </body>
++</html>
+diff --git a/reactShell/src/main.tsx b/reactShell/src/main.tsx
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/main.tsx
+@@ -0,0 +1,10 @@
++import React from 'react'
++import ReactDOM from 'react-dom/client'
++import App from './App.tsx'
++import './index.css'
++
++ReactDOM.createRoot(document.getElementById('root')!).render(
++  <React.StrictMode>
++    <App />
++  </React.StrictMode>,
++)
+diff --git a/reactShell/src/index.css b/reactShell/src/index.css
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/index.css
+@@ -0,0 +1,20 @@
++* {
++  margin: 0;
++  padding: 0;
++  box-sizing: border-box;
++}
++
++body {
++  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
++    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
++    sans-serif;
++  -webkit-font-smoothing: antialiased;
++  -moz-osx-font-smoothing: grayscale;
++  background: #000;
++  color: #fff;
++  overflow: hidden;
++}
++
++#root {
++  width: 100vw;
++  height: 100vh;
++}
+diff --git a/reactShell/src/App.tsx b/reactShell/src/App.tsx
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/App.tsx
+@@ -0,0 +1,24 @@
++import { useEffect } from 'react'
++import GameCanvas from './game/GameCanvas'
++import Hud from './ui/Hud'
++import UpgradeMenu from './ui/UpgradeMenu'
++import StatusOverlay from './ui/StatusOverlay'
++import PauseOverlay from './ui/PauseOverlay'
++
++function App() {
++  useEffect(() => {
++    // Initialize game
++    console.log('Asteroids React Shell initializing...')
++  }, [])
++
++  return (
++    <div className="app">
++      <GameCanvas />
++      <Hud />
++      <UpgradeMenu />
++      <StatusOverlay />
++      <PauseOverlay />
++    </div>
++  )
++}
++
++export default App
+diff --git a/reactShell/src/game/GameCanvas.tsx b/reactShell/src/game/GameCanvas.tsx
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/GameCanvas.tsx
+@@ -0,0 +1,4 @@
++// GameCanvas.tsx - Three.js mount point
++export default function GameCanvas() {
++  return <canvas id="game-canvas" />
++}
+diff --git a/reactShell/src/game/GameLoop.ts b/reactShell/src/game/GameLoop.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/GameLoop.ts
+@@ -0,0 +1,2 @@
++// GameLoop.ts - Main update loop
++export class GameLoop {}
+diff --git a/reactShell/src/game/GameState.ts b/reactShell/src/game/GameState.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/GameState.ts
+@@ -0,0 +1,2 @@
++// GameState.ts - Central state management
++export class GameState {}
+diff --git a/reactShell/src/game/Input.ts b/reactShell/src/game/Input.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/Input.ts
+@@ -0,0 +1,2 @@
++// Input.ts - Keyboard/mouse handling
++export class Input {}
+diff --git a/reactShell/src/game/render/Scene.ts b/reactShell/src/game/render/Scene.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/render/Scene.ts
+@@ -0,0 +1,2 @@
++// Scene.ts - Scene setup, lights, starfield
++export class Scene {}
+diff --git a/reactShell/src/game/render/PostFX.ts b/reactShell/src/game/render/PostFX.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/render/PostFX.ts
+@@ -0,0 +1,2 @@
++// PostFX.ts - EffectComposer chain
++export class PostFX {}
+diff --git a/reactShell/src/game/render/Materials.ts b/reactShell/src/game/render/Materials.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/render/Materials.ts
+@@ -0,0 +1,2 @@
++// Materials.ts - Toon materials, rim lighting
++export class Materials {}
+diff --git a/reactShell/src/game/systems/Physics.ts b/reactShell/src/game/systems/Physics.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/systems/Physics.ts
+@@ -0,0 +1,2 @@
++// Physics.ts - Movement, wrapping, friction
++export class Physics {}
+diff --git a/reactShell/src/game/systems/Collision.ts b/reactShell/src/game/systems/Collision.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/systems/Collision.ts
+@@ -0,0 +1,2 @@
++// Collision.ts - Circle-circle detection
++export class Collision {}
+diff --git a/reactShell/src/game/systems/Spawning.ts b/reactShell/src/game/systems/Spawning.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/systems/Spawning.ts
+@@ -0,0 +1,2 @@
++// Spawning.ts - Wave generation, enemy spawning
++export class Spawning {}
+diff --git a/reactShell/src/game/systems/Upgrades.ts b/reactShell/src/game/systems/Upgrades.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/systems/Upgrades.ts
+@@ -0,0 +1,2 @@
++// Upgrades.ts - Upgrade application logic
++export class Upgrades {}
+diff --git a/reactShell/src/game/entities/Ship.ts b/reactShell/src/game/entities/Ship.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/entities/Ship.ts
+@@ -0,0 +1,2 @@
++// Ship.ts - Player ship
++export class Ship {}
+diff --git a/reactShell/src/game/entities/Asteroid.ts b/reactShell/src/game/entities/Asteroid.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/entities/Asteroid.ts
+@@ -0,0 +1,2 @@
++// Asteroid.ts - Asteroid variants
++export class Asteroid {}
+diff --git a/reactShell/src/game/entities/Bullet.ts b/reactShell/src/game/entities/Bullet.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/entities/Bullet.ts
+@@ -0,0 +1,2 @@
++// Bullet.ts - Projectile system
++export class Bullet {}
+diff --git a/reactShell/src/game/entities/EnemyHunter.ts b/reactShell/src/game/entities/EnemyHunter.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/entities/EnemyHunter.ts
+@@ -0,0 +1,2 @@
++// EnemyHunter.ts - Hunter AI
++export class EnemyHunter {}
+diff --git a/reactShell/src/game/entities/Particles.ts b/reactShell/src/game/entities/Particles.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/entities/Particles.ts
+@@ -0,0 +1,2 @@
++// Particles.ts - Particle system
++export class Particles {}
+diff --git a/reactShell/src/game/entities/Debris.ts b/reactShell/src/game/entities/Debris.ts
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/game/entities/Debris.ts
+@@ -0,0 +1,2 @@
++// Debris.ts - Debris chunks
++export class Debris {}
+diff --git a/reactShell/src/ui/Hud.tsx b/reactShell/src/ui/Hud.tsx
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/ui/Hud.tsx
+@@ -0,0 +1,4 @@
++// Hud.tsx - Score, wave, combo display
++export default function Hud() {
++  return <div className="hud" />
++}
+diff --git a/reactShell/src/ui/UpgradeMenu.tsx b/reactShell/src/ui/UpgradeMenu.tsx
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/ui/UpgradeMenu.tsx
+@@ -0,0 +1,4 @@
++// UpgradeMenu.tsx - Between-wave upgrade picker
++export default function UpgradeMenu() {
++  return <div className="upgrade-menu" />
++}
+diff --git a/reactShell/src/ui/StatusOverlay.tsx b/reactShell/src/ui/StatusOverlay.tsx
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/ui/StatusOverlay.tsx
+@@ -0,0 +1,4 @@
++// StatusOverlay.tsx - Debug/diagnostic overlay
++export default function StatusOverlay() {
++  return <div className="status-overlay" />
++}
+diff --git a/reactShell/src/ui/PauseOverlay.tsx b/reactShell/src/ui/PauseOverlay.tsx
+new file mode 100644
+index 0000000..0000000
+--- /dev/null
++++ b/reactShell/src/ui/PauseOverlay.tsx
+@@ -0,0 +1,4 @@
++// PauseOverlay.tsx - Pause menu with restart
++export default function PauseOverlay() {
++  return <div className="pause-overlay" />
++}
